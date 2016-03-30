@@ -2,7 +2,6 @@ package sweet
 
 import (
 	"fmt"
-//	"strings"
 )
 // HP/Comware 
 type Cmw struct {
@@ -23,7 +22,7 @@ func (collector Cmw) Collect(device DeviceConfig) (map[string]string, error) {
 		return result, fmt.Errorf("Missing password prompt: %s", err.Error())
 	}
 	c.Send <- device.Config["pass"] + "\n"
-	multi := []string{"#", ">", "assword:", "[Y/N]:", "osition."}
+	multi := []string{"#", ">", "assword:", "[Y/N]:"}
 	m, err := expectMulti(multi, c.Receive)
 	if err != nil {
 		return result, fmt.Errorf("Invalid response to password: %s", err.Error())

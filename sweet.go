@@ -223,6 +223,8 @@ func collectDevice(device DeviceConfig, Opts *SweetOptions) DeviceStatus {
         c = newCsbCollector()
     } else if device.Method == "cmw" {
         c = newCmwCollector()
+    } else if device.Method == "vyatta" {
+        c = newVyattaCollector()
 	} else if device.Method == "external" {
 		// handle absolute and relative script paths
 		device.Config["scriptPath"] = device.Config["script"]
