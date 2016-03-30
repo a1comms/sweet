@@ -172,6 +172,11 @@ func setupOptions() (sweet.SweetOptions, error) {
 			if ok {
 				Opts.DefaultMethod = defaultMethod
 			}
+// Add config var for unlocking gimped hp/comware switches
+            cmwPass, ok := section["comware-unlock-pass"]
+            if ok {
+                Opts.CmwPass = cmwPass
+            }    
 
 		} else { // device-specific config
 			device := sweet.DeviceConfig{Hostname: name, Method: section["method"], Config: section}
