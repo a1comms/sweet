@@ -225,7 +225,9 @@ func collectDevice(device DeviceConfig, Opts *SweetOptions) DeviceStatus {
         c = newCmwCollector()
     } else if device.Method == "vyatta" {
         c = newVyattaCollector()
-	} else if device.Method == "external" {
+	} else if device.Method == "pfsense" {
+        c = newPfsCollector()
+    } else if device.Method == "external" {
 		// handle absolute and relative script paths
 		device.Config["scriptPath"] = device.Config["script"]
 		if device.Config["script"][0] != os.PathSeparator {
