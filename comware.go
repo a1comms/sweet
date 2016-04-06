@@ -2,6 +2,7 @@ package sweet
 
 import (
 	"fmt"
+    "time"
 )
 // HP/Comware 
 type Cmw struct {
@@ -64,6 +65,7 @@ func (collector Cmw) Collect(device DeviceConfig) (map[string]string, error) {
    }
 
 	c.Send <- "quit\n"
-
+    time.Sleep(1 * time.Second)
+    c.Send <- "quit\n"
 	return result, nil
 }
