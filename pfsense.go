@@ -16,7 +16,7 @@ func newPfsCollector() Collector {
 
 func (collector Pfs) Collect(device DeviceConfig) (map[string]string, error) {
 	result := make(map[string]string)
-    tail := regexp.MustCompile("(?m)[\r\n]+^.*RELEASE.*$")
+    tail := regexp.MustCompile("(?m)[\r\n]+^.*-RELEASE.*$")
 	c, err := newSSHCollector(device)
 	if err != nil {
 		return result, fmt.Errorf("Error connecting to %s: %s", device.Hostname, err.Error())
@@ -36,14 +36,14 @@ func (collector Pfs) Collect(device DeviceConfig) (map[string]string, error) {
 		return result, fmt.Errorf("Bad username or password.")
     }else if m == "option:" {
         c.Send <- "8\n"
-        if err := expect("RELEASE", c.Receive); err !=nil {
+        if err := expect("-RELEASE", c.Receive); err !=nil {
             return result, fmt.Errorf("Unable to activate Shell")
         }
 // Dump config
         var conf string
         conf = "cat /conf/config.xml"
         c.Send <- conf + "\n" 
-        result["config"], err = expectSaveTimeout("RELEASE", c.Receive, device.CommandTimeout)
+        result["config"], err = expectSaveTimeout("-RELEASE", c.Receive, device.CommandTimeout)
         if err != nil {
             return result, fmt.Errorf("Unable to dump config.xml", err.Error())
         }
