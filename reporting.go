@@ -12,7 +12,8 @@ func runReporter(Opts *SweetOptions) error {
 	Opts.LogInfo("Starting reporter.")
 	changeReport := ""
 	changeDiffs := ""
-
+    var send int
+    send = 0
 	// print changes to log
 	for _, device := range Opts.Devices {
 		stat := Opts.Status.Get(device.Hostname)
@@ -20,6 +21,7 @@ func runReporter(Opts *SweetOptions) error {
 			if len(stat.Diffs) < 1 {
 				changeReport += fmt.Sprintf("%s: no changes\n", device.Hostname)
 			} else {
+                send += 1
 				changeReport += fmt.Sprintf("%s: changes!\n", device.Hostname)
 				for name, d := range stat.Diffs {
 					if d.NewFile {
@@ -45,10 +47,12 @@ func runReporter(Opts *SweetOptions) error {
 			return fmt.Errorf("Error getting my hostname: %s", err.Error())
 		}
 		emailSubject := fmt.Sprintf("Change notification from Sweet on %s", hostname)
-		err = sendEmail(Opts, emailSubject, changeReport+changeDiffs)
-		if err != nil {
-			return fmt.Errorf("Error sending notification email: %s", err.Error())
-		}
+        if send >= 1 {
+    		err = sendEmail(Opts, emailSubject, changeReport+changeDiffs)
+	    	if err != nil {
+		    	return fmt.Errorf("Error sending notification email: %s", err.Error())
+		    }
+        }    
 	}
 
 	Opts.LogInfo("Finished reporter.")

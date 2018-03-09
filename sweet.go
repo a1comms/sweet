@@ -88,6 +88,7 @@ type SweetOptions struct {
 	DefaultUser   string
 	DefaultPass   string
 	DefaultMethod string
+    CmwPass       string
 	Syslog        *syslog.Writer
 	Devices       []DeviceConfig
 	Status        *Status
@@ -218,7 +219,15 @@ func collectDevice(device DeviceConfig, Opts *SweetOptions) DeviceStatus {
 	var c Collector
 	if device.Method == "cisco" {
 		c = newCiscoCollector()
-	} else if device.Method == "external" {
+    } else if device.Method == "csb" {
+        c = newCsbCollector()
+    } else if device.Method == "cmw" {
+        c = newCmwCollector()
+    } else if device.Method == "vyatta" {
+        c = newVyattaCollector()
+	} else if device.Method == "pfsense" {
+        c = newPfsCollector()
+    } else if device.Method == "external" {
 		// handle absolute and relative script paths
 		device.Config["scriptPath"] = device.Config["script"]
 		if device.Config["script"][0] != os.PathSeparator {
