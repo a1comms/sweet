@@ -2,6 +2,7 @@ package sweet
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -63,6 +64,7 @@ func (collector Cisco) Collect(device DeviceConfig) (map[string]string, error) {
 	// cleanup config results
 	result["config"] = strings.TrimSpace(strings.TrimPrefix(result["config"], "show running-config"))
 	result["config"] = strings.TrimSpace(strings.TrimPrefix(result["config"], "Building configuration..."))
+	result["version"] = regexp.MustCompile(" uptime is .*").ReplaceAllString(result["version"], " uptime is ##removed##")
 
 	c.Send <- "exit\n"
 
